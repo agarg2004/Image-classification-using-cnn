@@ -10,7 +10,7 @@ The above file contains the final code of convolutional neural network implement
 The images_dataset_mlsc contains the unlabelle, unanotated images dataset. Annoated images contains only those images which have been labelled and the labels have been stored in dataset_new.csv. The reference_images and test_images folder can be used for testing.
 
 # Accuracy
-This model is having an accuracy of 65% which can be increased by hyperparameter tuning like modifying the learning rate, batch size, number of filters and performing preprocessing of data like rehaping, resizing, grayscaling, etc.
+This model is having an accuracy of 70% which can be increased by hyperparameter tuning like modifying the learning rate, batch size, number of filters and performing preprocessing of data like rehaping, resizing, grayscaling, etc.
 
 ![Screenshot 2025-02-15 222419](https://github.com/user-attachments/assets/8de23dfd-3afb-4754-b351-89442c08bef4)
 
