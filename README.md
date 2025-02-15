@@ -12,6 +12,8 @@ The images_dataset_mlsc contains the unlabelle, unanotated images dataset. Annoa
 # Accuracy
 This model is having an accuracy of 65% which can be increased by hyperparameter tuning like modifying the learning rate, batch size, number of filters and performing preprocessing of data like rehaping, resizing, grayscaling, etc.
 
+![Screenshot 2025-02-15 222419](https://github.com/user-attachments/assets/8de23dfd-3afb-4754-b351-89442c08bef4)
+
 ![image](https://github.com/user-attachments/assets/5626ed6f-4792-445e-8cf0-76cc1190de6a)
 
 ![image](https://github.com/user-attachments/assets/39df4cb4-2573-489d-8cc9-06af82ff60fc)
