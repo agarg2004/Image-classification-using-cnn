@@ -1,0 +1,91 @@
+import os
+import pandas as pd
+import numpy as np
+import cv2
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.optimizers import Adam, SGD, RMSprop
+
+
+# Define paths
+dataset_csv = "dataset_new.csv"
+image_folder = "E:/image labelling/annotated_images"  # Update path accordingly
+
+# Load dataset
+df = pd.read_csv(dataset_csv)
+
+# Parameters
+IMG_SIZE = 64  # Resize all images to 64x64
+NUM_CLASSES = 13  
+
+# Load images and labels
+X = []
+y = []
+
+for index, row in df.iterrows():
+    image_path = os.path.join(image_folder, row["Image_Name"])
+    
+    # Read and preprocess image
+    if os.path.exists(image_path):
+        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Load as grayscale
+        image = cv2.resize(image, (IMG_SIZE, IMG_SIZE))  # Resize
+        image = image / 255.0  # Normalize pixel values (0-1)
+        X.append(image)
+        y.append(row["Label"])
+
+# Convert to NumPy arrays
+X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)  # Add channel dimension
+y = np.array(y)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# one-hot encoding
+y_train = keras.utils.to_categorical(y_train, NUM_CLASSES)
+y_test = keras.utils.to_categorical(y_test, NUM_CLASSES)
+
+# CNN model
+model = keras.Sequential([
+    layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_SIZE, IMG_SIZE, 1)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation="relu"),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(128, (3, 3), activation="relu"),
+    layers.MaxPooling2D((2, 2)),
+    layers.Flatten(),
+    layers.Dense(128, activation="relu"),
+    layers.Dense(NUM_CLASSES, activation="softmax")
+])
+
+# Compile model
+model.compile(optimizer=Adam(learning_rate=0.001), loss="categorical_crossentropy", metrics=["accuracy"])
+
+# Train model
+history = model.fit(X_train, y_train, epochs=20, batch_size=16, validation_data=(X_test, y_test))
+
+# Evaluate model
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print(f"Test accuracy: {test_acc:.4f}")
+
+# Save the trained model
+model.save("cnn_image_classifier.h5")
+print("Model saved as 'cnn_image_classifier.h5'")
+
+
+# test on an image sample
+image = cv2.imread("E:/image labelling/reference_images/apporva.JPG", cv2.IMREAD_GRAYSCALE)
+image = cv2.resize(image, (64, 64))  # Resize to match model input size
+image = image / 255.0  # Normalizatiobn
+
+# Reshape to match CNN input (batch_size, height, width, channels)
+image = np.reshape(image, (1, 64, 64, 1)).astype(np.float32)
+
+# Predict
+prediction = model.predict(image)
+predicted_label = np.argmax(prediction)
+
+# Print results
+print(f"Predicted Label: {predicted_label}")
+print(f"Prediction Probabilities: {prediction[0]}")
