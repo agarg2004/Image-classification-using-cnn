@@ -1,5 +1,5 @@
-# Image-classification-using-cnn
-This is an image classification model trained using convoltuional neural networks on a custom images dataset containing images of 13 people( classes).
+# Multi Class Image-classification-using-cnn
+This is a multi class image classification model trained using convoltuional neural networks on a custom images dataset containing images of 13 people( classes).
 
 
 # How to run the code
